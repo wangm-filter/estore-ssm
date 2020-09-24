@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+  "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.dao.CategoryMapper">
+	<select id="selectFirstCategory" resultMap="categoryResultMap">
+		select * from es_category
+		where category_id is null
+	</select>
+	<select id="selectSecondCategory" parameterType="int" resultType="Category">
+		select * from es_category
+		where category_id = #{id}
+	</select>
+	<resultMap type="Category" id="categoryResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="description" property="description"/> 
+		<collection property="categories" column="id" select="selectSecondCategory"></collection>
+	</resultMap>
+</mapper>

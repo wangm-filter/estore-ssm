@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+  "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.dao.OrderLineMapper">
+	<!-- 插入一个订单项 -->
+	<insert id="insertLine" parameterType="OrderLine">
+	   insert into es_orderLine(id,num,cost,book_id,orderForm_id)
+	   values(#{id},#{num},#{cost},#{book.id},#{orderForm.id})
+	</insert>
+	<select id="selectOrderLineById" parameterType="int" resultMap="OrderLineResult">
+	   select * from es_orderline
+	   where orderForm_id = #{id}
+	</select>
+	<resultMap type="OrderLine" id="OrderLineResult">
+	   <id column="id" property="id"/>
+	   <result column="num" property="num"/>
+	   <result column="cost" property="cost"/>
+	   <association property="book" column="book_id" select="selectBookById"></association>
+	</resultMap>
+	<select id="selectBookById" parameterType="int" resultType="Book">
+	   select * from es_book
+	   where id = #{id}
+	</select>
+	<!-- 根据orderFrom_id删除订单项 -->
+	<delete id="deleteOrderLineByFromId" parameterType="int">
+       delete from es_orderline
+       where orderForm_id = #{id}
+    </delete>
+</mapper>

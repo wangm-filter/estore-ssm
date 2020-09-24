@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+  "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.estore.dao.OrderFormMapper">
+	<!-- 插入一个订单-->
+	<insert id="insertOrder" parameterType="OrderForm"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+	   insert into es_orderform(id,cost,orderDate,shopAddress_id,customer_id)
+	   values(#{id},#{cost},#{orderdate},#{shopAddress.id},#{customer.id})
+	</insert>
+	
+	<!--根据顾客的id查询所有的订单信息 -->
+	
+	<select id="selectOrderByCustId" parameterType="int" resultMap="OrderFormResult">
+	   select * 
+	   from es_orderForm
+	   where customer_id = #{id}
+	</select>
+	
+	<resultMap type="orderForm" id="OrderFormResult">
+	   <id property="id" column="id"/>
+	   <result property="cost" column="cost"/>
+	   <result property="orderdate" column="orderDate"/>
+	   <association property="customer" column="customer_id" select="selectCustomerById"></association>
+	</resultMap>
+	<resultMap type="Customer" id="customerResult">
+	   <id column="id" property="id"/>
+	   <result column="name" property="name"/>
+	</resultMap>
+	<!-- 根据id查询顾客信息 -->
+	<select id="selectCustomerById" parameterType="int" resultMap="customerResult">
+	   select * from es_customer
+	   where id = #{id}
+	</select>
+	<!-- 根据id删除订单 -->
+	
+	<delete id="deleteOrderFormById" parameterType="int">
+	   delete from es_orderForm
+	   where id = #{id}
+	</delete>
+</mapper>
